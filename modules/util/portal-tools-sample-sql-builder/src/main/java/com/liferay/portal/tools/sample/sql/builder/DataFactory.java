@@ -579,6 +579,10 @@ public class DataFactory {
 		return getClassNameId(DLFileEntry.class);
 	}
 
+    public RoleModel getGuestRoleModel() {
+		return _guestRoleModel;
+	}
+
 	public long getJournalArticleClassNameId() {
 		return getClassNameId(JournalArticle.class);
 	}
@@ -1750,7 +1754,7 @@ public class DataFactory {
 
 		// Other fields
 
-		commerceOrderItemModel.setCommerceInventoryBookedQuantityId(0);
+		commerceOrderItemModel.setBookedQuantityId(0);
 		commerceOrderItemModel.setCommerceOrderId(
 			commerceOrderModel.getCommerceOrderId());
 		commerceOrderItemModel.setCommercePriceListId(commercePriceListId);
@@ -7098,9 +7102,6 @@ public class DataFactory {
 				}
 				else if (name.equals("CmExternalReferenceCode")) {
 					name = "ClassedModelExternalReferenceCode";
-				}
-				else if (name.equals("CIBookedQuantityId")) {
-					name = "CommerceInventoryBookedQuantityId";
 				}
 				else if (name.equals("CIWarehouseId")) {
 					name = "CommerceInventoryWarehouseId";
