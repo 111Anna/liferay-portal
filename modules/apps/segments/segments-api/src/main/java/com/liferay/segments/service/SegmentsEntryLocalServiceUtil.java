@@ -330,19 +330,28 @@ public class SegmentsEntryLocalServiceUtil {
 	}
 
 	public static List<SegmentsEntry> getSegmentsEntries(
-		long groupId, int start, int end,
-		OrderByComparator<SegmentsEntry> orderByComparator) {
+		long groupId, boolean includeAncestorSegmentsEntries, int start,
+		int end, OrderByComparator<SegmentsEntry> orderByComparator) {
 
 		return getService().getSegmentsEntries(
-			groupId, start, end, orderByComparator);
+			groupId, includeAncestorSegmentsEntries, start, end,
+			orderByComparator);
 	}
 
 	public static List<SegmentsEntry> getSegmentsEntries(
-		long groupId, String source, String type, int start, int end,
+		long groupId, boolean active, String type, int start, int end,
 		OrderByComparator<SegmentsEntry> orderByComparator) {
 
 		return getService().getSegmentsEntries(
-			groupId, source, type, start, end, orderByComparator);
+			groupId, active, type, start, end, orderByComparator);
+	}
+
+	public static List<SegmentsEntry> getSegmentsEntries(
+		long groupId, boolean active, String source, String type, int start,
+		int end, OrderByComparator<SegmentsEntry> orderByComparator) {
+
+		return getService().getSegmentsEntries(
+			groupId, active, source, type, start, end, orderByComparator);
 	}
 
 	public static List<SegmentsEntry> getSegmentsEntriesBySource(
@@ -394,8 +403,11 @@ public class SegmentsEntryLocalServiceUtil {
 		return getService().getSegmentsEntriesCount();
 	}
 
-	public static int getSegmentsEntriesCount(long groupId) {
-		return getService().getSegmentsEntriesCount(groupId);
+	public static int getSegmentsEntriesCount(
+		long groupId, boolean includeAncestorSegmentsEntries) {
+
+		return getService().getSegmentsEntriesCount(
+			groupId, includeAncestorSegmentsEntries);
 	}
 
 	/**
@@ -435,6 +447,17 @@ public class SegmentsEntryLocalServiceUtil {
 
 		return getService().searchSegmentsEntries(
 			companyId, groupId, keywords, params, start, end, sort);
+	}
+
+	public static com.liferay.portal.kernel.search.BaseModelSearchResult
+		<SegmentsEntry> searchSegmentsEntries(
+				long companyId, String keywords,
+				java.util.LinkedHashMap<String, Object> params, int start,
+				int end, com.liferay.portal.kernel.search.Sort sort)
+			throws PortalException {
+
+		return getService().searchSegmentsEntries(
+			companyId, keywords, params, start, end, sort);
 	}
 
 	public static com.liferay.portal.kernel.search.BaseModelSearchResult
