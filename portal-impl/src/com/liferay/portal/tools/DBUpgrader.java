@@ -184,6 +184,8 @@ public class DBUpgrader {
 			result = "Failed";
 		}
 		finally {
+			IndexUpdaterUtil.destroy();
+
 			StartupHelperUtil.setUpgrading(false);
 
 			System.out.println(
