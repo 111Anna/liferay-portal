@@ -773,16 +773,17 @@ public abstract class BaseDB implements DB {
 
 	@Override
 	public void updateIndexes(
-			Connection connection, String tableName, String indexesSQL,
+			Connection connection, String tablesSQL, String indexesSQL,
 			boolean dropIndexes)
 		throws Exception {
 
-		List<Index> indexes = _getIndexes(connection, tableName);
+		List<Index> indexes = getIndexes(connection);
 
-		Set<String> validIndexNames;
+		Set<String> validIndexNames = null;
 
 		if (dropIndexes) {
-			validIndexNames = dropIndexes(connection, indexesSQL, indexes);
+			validIndexNames = dropIndexes(
+				connection, tablesSQL, indexesSQL, indexes);
 		}
 		else {
 			validIndexNames = new HashSet<>();
@@ -1157,7 +1158,8 @@ public abstract class BaseDB implements DB {
 	}
 
 	protected Set<String> dropIndexes(
-			Connection connection, String indexesSQL, List<Index> indexes)
+			Connection connection, String tablesSQL, String indexesSQL,
+			List<Index> indexes)
 		throws IOException, SQLException {
 
 		if (_log.isInfoEnabled()) {
@@ -1170,6 +1172,7 @@ public abstract class BaseDB implements DB {
 			return validIndexNames;
 		}
 
+		String tablesSQLLowerCase = StringUtil.toLowerCase(tablesSQL);
 		String indexesSQLLowerCase = StringUtil.toLowerCase(indexesSQL);
 
 		String[] lines = StringUtil.splitLines(indexesSQL);
@@ -1195,6 +1198,10 @@ public abstract class BaseDB implements DB {
 			String indexNameLowerCase = StringUtil.toLowerCase(
 				indexNameUpperCase);
 
+			String tableName = index.getTableName();
+
+			String tableNameLowerCase = StringUtil.toLowerCase(tableName);
+
 			validIndexNames.add(indexNameUpperCase);
 
 			if (indexNames.contains(indexNameLowerCase)) {
@@ -1214,12 +1221,16 @@ public abstract class BaseDB implements DB {
 					continue;
 				}
 			}
+			else if (!tablesSQLLowerCase.contains(
+						CREATE_TABLE + tableNameLowerCase + " (")) {
+
+				continue;
+			}
 
 			validIndexNames.remove(indexNameUpperCase);
 
 			String sql = StringBundler.concat(
-				"drop index ", indexNameUpperCase, " on ",
-				index.getTableName());
+				"drop index ", indexNameUpperCase, " on ", tableName);
 
 			if (_log.isInfoEnabled()) {
 				_log.info(sql);
@@ -1540,15 +1551,6 @@ public abstract class BaseDB implements DB {
 		matcher.appendTail(sb);
 
 		return sb.toString();
-	}
-
-	private List<Index> _getIndexes(Connection connection, String tableName)
-		throws Exception {
-
-		return TransformUtil.transform(
-			getIndexes(connection, tableName, null, false),
-			index -> new Index(
-				index.getIndexName(), index.getTableName(), index.isUnique()));
 	}
 
 	private List<PrimaryKey> _getPrimaryKeys(
