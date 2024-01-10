@@ -712,8 +712,7 @@ public class ServiceBuilder {
 			_mvccEnabled = GetterUtil.getBoolean(
 				rootElement.attributeValue("mvcc-enabled"));
 			_optimizeDBIndexes = GetterUtil.getBoolean(
-				rootElement.attributeValue("optimize-db-indexes"),
-				isVersionGTE_7_4_0());
+				rootElement.attributeValue("optimize-db-indexes"), true);
 			_shortNoSuchExceptionEnabled = GetterUtil.getBoolean(
 				rootElement.attributeValue("short-no-such-exception-enabled"),
 				true);
