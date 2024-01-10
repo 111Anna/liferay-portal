@@ -9,11 +9,9 @@ import com.liferay.petra.lang.HashUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.IntegerWrapper;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -74,7 +72,11 @@ public class IndexMetadata extends Index implements Comparable<IndexMetadata> {
 		String[] columnNames = _columnNames.clone();
 
 		for (int i = 0; i < columnNames.length; i++) {
-			columnNames[i] = _trimColumnName(columnNames[i]);
+			int index = columnNames[i].indexOf("[$COLUMN_LENGTH:");
+
+			if (index > 0) {
+				columnNames[i] = columnNames[i].substring(0, index);
+			}
 		}
 
 		return columnNames;
@@ -139,20 +141,6 @@ public class IndexMetadata extends Index implements Comparable<IndexMetadata> {
 		return hashCode;
 	}
 
-	public void optimizeColumns(Map<String, IntegerWrapper> frequencyMap) {
-		Arrays.sort(
-			_columnNames,
-			(columnName1, columnName2) -> {
-				IntegerWrapper count1 = frequencyMap.get(
-					_trimColumnName(columnName1));
-
-				IntegerWrapper count2 = frequencyMap.get(
-					_trimColumnName(columnName2));
-
-				return count2.compareTo(count1);
-			});
-	}
-
 	public Boolean redundantTo(IndexMetadata indexMetadata) {
 		String[] indexMetadataColumnNames = indexMetadata._columnNames;
 
@@ -196,16 +184,6 @@ public class IndexMetadata extends Index implements Comparable<IndexMetadata> {
 	@Override
 	public String toString() {
 		return getCreateSQL(null);
-	}
-
-	private String _trimColumnName(String columnName) {
-		int index = columnName.indexOf("[$COLUMN_LENGTH:");
-
-		if (index > 0) {
-			columnName = columnName.substring(0, index);
-		}
-
-		return columnName;
 	}
 
 	private final String[] _columnNames;
