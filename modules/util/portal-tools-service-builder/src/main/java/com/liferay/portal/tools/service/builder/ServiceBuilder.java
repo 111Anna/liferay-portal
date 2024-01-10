@@ -711,8 +711,6 @@ public class ServiceBuilder {
 
 			_mvccEnabled = GetterUtil.getBoolean(
 				rootElement.attributeValue("mvcc-enabled"));
-			_optimizeDBIndexes = GetterUtil.getBoolean(
-				rootElement.attributeValue("optimize-db-indexes"), true);
 			_shortNoSuchExceptionEnabled = GetterUtil.getBoolean(
 				rootElement.attributeValue("short-no-such-exception-enabled"),
 				true);
@@ -2284,12 +2282,7 @@ public class ServiceBuilder {
 		List<IndexMetadata> indexMetadatas = indexMetadatasMap.computeIfAbsent(
 			tableName, key -> new ArrayList<>());
 
-		if (_optimizeDBIndexes) {
-			indexMetadatas.add(indexMetadata);
-		}
-		else {
-			_addIndexMetadata(indexMetadatas, indexMetadata);
-		}
+		indexMetadatas.add(indexMetadata);
 	}
 
 	private boolean _containSpecialCharacter(String name) {
@@ -4144,7 +4137,7 @@ public class ServiceBuilder {
 			List<IndexMetadata> indexMetadatas = indexMetadatasMap.get(
 				entity.getTable());
 
-			if ((indexMetadatas != null) && _optimizeDBIndexes) {
+			if (indexMetadatas != null) {
 				indexMetadatas.clear();
 			}
 
@@ -4201,21 +4194,19 @@ public class ServiceBuilder {
 
 				boolean unique = entityFinder.isUnique();
 
-				if (_optimizeDBIndexes) {
-					for (String highCardinalityColumnName :
-							_highCardinalityColumnNames) {
+				for (String highCardinalityColumnName :
+						_highCardinalityColumnNames) {
 
-						if (dbNames.contains(highCardinalityColumnName) &&
-							(dbNames.size() > 1)) {
+					if (dbNames.contains(highCardinalityColumnName) &&
+						(dbNames.size() > 1)) {
 
-							dbNames.clear();
+						dbNames.clear();
 
-							dbNames.add(highCardinalityColumnName);
+						dbNames.add(highCardinalityColumnName);
 
-							unique = false;
+						unique = false;
 
-							break;
-						}
+						break;
 					}
 				}
 
@@ -4241,9 +4232,7 @@ public class ServiceBuilder {
 		StringBundler sb = new StringBundler();
 
 		for (List<IndexMetadata> indexMetadatas : indexMetadatasMap.values()) {
-			if (_optimizeDBIndexes) {
-				indexMetadatas = _optimizeForBTreeIndexes(indexMetadatas);
-			}
+			indexMetadatas = _optimizeForBTreeIndexes(indexMetadatas);
 
 			Collections.sort(indexMetadatas);
 
@@ -8181,7 +8170,6 @@ public class ServiceBuilder {
 	private final Set<String> _modifiedFileNames = new HashSet<>();
 	private boolean _mvccEnabled;
 	private String _oldServiceOutputPath;
-	private boolean _optimizeDBIndexes;
 	private boolean _osgiModule;
 	private String _outputPath;
 	private String _packagePath;
