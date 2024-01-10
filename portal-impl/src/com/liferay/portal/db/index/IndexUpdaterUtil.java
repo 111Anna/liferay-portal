@@ -119,8 +119,6 @@ public class IndexUpdaterUtil {
 								_awaitTermination();
 							}
 
-							_updatedServletContextNames.clear();
-
 							return null;
 						});
 
