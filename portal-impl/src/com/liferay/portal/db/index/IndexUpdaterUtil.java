@@ -18,7 +18,6 @@ import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.util.LoggingTimer;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.util.PropsValues;
 
 import java.sql.Connection;
 
@@ -47,7 +46,16 @@ public class IndexUpdaterUtil {
 			executorService -> {
 				executorService.shutdown();
 
-				_awaitTermination();
+				for (Future<?> future : _futures) {
+					try {
+						future.get();
+					}
+					catch (Exception exception) {
+						_log.error(exception);
+					}
+				}
+
+				_futures.clear();
 			});
 	}
 
@@ -113,12 +121,6 @@ public class IndexUpdaterUtil {
 						() -> {
 							bundleTracker.close();
 
-							if (!PropsValues.
-									DATABASE_INDEXES_UPDATE_IN_BACKGROUND) {
-
-								_awaitTermination();
-							}
-
 							return null;
 						});
 
@@ -131,10 +133,6 @@ public class IndexUpdaterUtil {
 		_updateIndexes(
 			bundle.getSymbolicName(), DBResourceUtil.getModuleTablesSQL(bundle),
 			DBResourceUtil.getModuleIndexesSQL(bundle));
-
-		if (!PropsValues.DATABASE_INDEXES_UPDATE_IN_BACKGROUND) {
-			_awaitTermination();
-		}
 	}
 
 	public static void updatePortalIndexes() {
@@ -148,24 +146,6 @@ public class IndexUpdaterUtil {
 				_log.warn(exception);
 			}
 		}
-		finally {
-			if (!PropsValues.DATABASE_INDEXES_UPDATE_IN_BACKGROUND) {
-				_awaitTermination();
-			}
-		}
-	}
-
-	private static void _awaitTermination() {
-		for (Future<?> future : _futures) {
-			try {
-				future.get();
-			}
-			catch (Exception exception) {
-				_log.error(exception);
-			}
-		}
-
-		_futures.clear();
 	}
 
 	private static ExecutorService _getExecutorService() {
