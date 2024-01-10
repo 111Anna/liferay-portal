@@ -174,7 +174,9 @@ public class IndexUpdaterUtil {
 				executorService.submit(
 					() -> {
 						try {
-							_updateIndexes(entry.getKey(), entry.getValue());
+							_updateIndexes(
+								entry.getKey(), entry.getKey(),
+								entry.getValue());
 						}
 						catch (Exception exception) {
 							throw new RuntimeException(exception);
@@ -216,7 +218,8 @@ public class IndexUpdaterUtil {
 		return indexesSQLMap;
 	}
 
-	private static void _updateIndexes(String tableName, String indexesSQL)
+	private static void _updateIndexes(
+			String tableName, String tablesSQL, String indexesSQL)
 		throws Exception {
 
 		DB db = DBManagerUtil.getDB();
@@ -226,7 +229,7 @@ public class IndexUpdaterUtil {
 				try {
 					try (Connection connection = DataAccess.getConnection()) {
 						db.updateIndexes(
-							connection, tableName, indexesSQL, true);
+							connection, tablesSQL, indexesSQL, true);
 					}
 				}
 				catch (Exception exception) {
