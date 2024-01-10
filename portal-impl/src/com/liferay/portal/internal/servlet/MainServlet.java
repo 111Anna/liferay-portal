@@ -392,7 +392,8 @@ public class MainServlet extends HttpServlet {
 
 			StartupHelperUtil.setUpgrading(false);
 		}
-		else if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
+
+		if (PropsValues.DATABASE_INDEXES_UPDATE_ON_STARTUP) {
 			IndexUpdaterUtil.updateAllIndexes();
 		}
 

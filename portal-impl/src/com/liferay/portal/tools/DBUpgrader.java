@@ -241,8 +241,6 @@ public class DBUpgrader {
 			PortalCacheManagerNames.MULTI_VM);
 
 		_registerModuleServiceLifecycle("portlets.initialized");
-
-		IndexUpdaterUtil.updateAllIndexes();
 	}
 
 	public static void upgradePortal() throws Exception {
