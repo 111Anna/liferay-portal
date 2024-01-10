@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
 import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.GroupThreadLocal;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -293,8 +294,8 @@ public class SegmentsEntryLocalServiceImpl
 		OrderByComparator<SegmentsEntry> orderByComparator) {
 
 		return segmentsEntryPersistence.findByG_A_T(
-			_portal.getCurrentAndAncestorSiteGroupIds(groupId), active, type,
-			start, end, orderByComparator);
+			ArrayUtil.append(_portal.getAncestorSiteGroupIds(groupId), groupId),
+			active, type, start, end, orderByComparator);
 	}
 
 	@Override
@@ -303,8 +304,8 @@ public class SegmentsEntryLocalServiceImpl
 		int end, OrderByComparator<SegmentsEntry> orderByComparator) {
 
 		return segmentsEntryPersistence.findByG_A_S_T(
-			_portal.getCurrentAndAncestorSiteGroupIds(groupId), active, source,
-			type, start, end, orderByComparator);
+			ArrayUtil.append(_portal.getAncestorSiteGroupIds(groupId), groupId),
+			active, source, type, start, end, orderByComparator);
 	}
 
 	@Override
@@ -313,8 +314,8 @@ public class SegmentsEntryLocalServiceImpl
 		OrderByComparator<SegmentsEntry> orderByComparator) {
 
 		return segmentsEntryPersistence.findByGroupId(
-			_portal.getCurrentAndAncestorSiteGroupIds(groupId), start, end,
-			orderByComparator);
+			ArrayUtil.append(_portal.getAncestorSiteGroupIds(groupId), groupId),
+			start, end, orderByComparator);
 	}
 
 	@Override
@@ -329,7 +330,8 @@ public class SegmentsEntryLocalServiceImpl
 	@Override
 	public int getSegmentsEntriesCount(long groupId) {
 		return segmentsEntryPersistence.countByGroupId(
-			_portal.getCurrentAndAncestorSiteGroupIds(groupId));
+			ArrayUtil.append(
+				_portal.getAncestorSiteGroupIds(groupId), groupId));
 	}
 
 	@Override
