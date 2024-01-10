@@ -106,8 +106,8 @@ public class CheckIndividualSegmentsSchedulerJobConfiguration
 
 			SegmentsEntry segmentsEntry =
 				_segmentsEntryLocalService.fetchSegmentsEntry(
-					serviceContext.getScopeGroupId(),
-					individualSegment.getId());
+					serviceContext.getScopeGroupId(), individualSegment.getId(),
+					true);
 
 			Map<Locale, String> nameMap = Collections.singletonMap(
 				_portal.getSiteDefaultLocale(serviceContext.getScopeGroupId()),
@@ -434,7 +434,8 @@ public class CheckIndividualSegmentsSchedulerJobConfiguration
 			individualSegmentId -> {
 				SegmentsEntry curSegmentsEntry =
 					_segmentsEntryLocalService.fetchSegmentsEntry(
-						serviceContext.getScopeGroupId(), individualSegmentId);
+						serviceContext.getScopeGroupId(), individualSegmentId,
+						true);
 
 				if (curSegmentsEntry != null) {
 					return curSegmentsEntry.getSegmentsEntryId();

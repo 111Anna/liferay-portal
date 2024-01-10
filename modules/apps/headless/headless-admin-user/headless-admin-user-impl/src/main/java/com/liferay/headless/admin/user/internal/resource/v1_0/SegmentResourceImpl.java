@@ -49,10 +49,11 @@ public class SegmentResourceImpl extends BaseSegmentResourceImpl {
 		return Page.of(
 			transform(
 				_segmentsEntryService.getSegmentsEntries(
-					siteId, pagination.getStartPosition(),
+					siteId, true, pagination.getStartPosition(),
 					pagination.getEndPosition(), null),
 				this::_toSegment),
-			pagination, _segmentsEntryService.getSegmentsEntriesCount(siteId));
+			pagination,
+			_segmentsEntryService.getSegmentsEntriesCount(siteId, true));
 	}
 
 	@Override

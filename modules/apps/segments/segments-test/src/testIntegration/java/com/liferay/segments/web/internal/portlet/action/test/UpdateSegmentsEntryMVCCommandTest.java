@@ -99,7 +99,7 @@ public class UpdateSegmentsEntryMVCCommandTest {
 
 		SegmentsEntry segmentsEntry =
 			_segmentsEntryLocalService.fetchSegmentsEntry(
-				_group.getGroupId(), "key12345");
+				_group.getGroupId(), "key12345", false);
 
 		Assert.assertEquals(
 			"New Segments Entry",

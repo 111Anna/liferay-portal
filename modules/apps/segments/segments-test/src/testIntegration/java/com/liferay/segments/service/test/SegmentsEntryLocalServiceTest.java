@@ -108,7 +108,7 @@ public class SegmentsEntryLocalServiceTest {
 		Assert.assertEquals(
 			1,
 			_segmentsEntryLocalService.getSegmentsEntriesCount(
-				_group.getGroupId()));
+				_group.getGroupId(), false));
 	}
 
 	@Test
@@ -216,7 +216,7 @@ public class SegmentsEntryLocalServiceTest {
 		Assert.assertEquals(
 			0,
 			_segmentsEntryLocalService.getSegmentsEntriesCount(
-				_group.getGroupId()));
+				_group.getGroupId(), false));
 	}
 
 	@Test
@@ -230,14 +230,14 @@ public class SegmentsEntryLocalServiceTest {
 		Assert.assertEquals(
 			count,
 			_segmentsEntryLocalService.getSegmentsEntriesCount(
-				_group.getGroupId()));
+				_group.getGroupId(), false));
 
 		_segmentsEntryLocalService.deleteSegmentsEntries(_group.getGroupId());
 
 		Assert.assertEquals(
 			0,
 			_segmentsEntryLocalService.getSegmentsEntriesCount(
-				_group.getGroupId()));
+				_group.getGroupId(), false));
 	}
 
 	@Test
@@ -327,9 +327,14 @@ public class SegmentsEntryLocalServiceTest {
 
 		int segmentsEntriesCount =
 			_segmentsEntryLocalService.getSegmentsEntriesCount(
-				childGroup.getGroupId());
+				childGroup.getGroupId(), true);
 
 		Assert.assertTrue(segmentsEntriesCount > 0);
+
+		Assert.assertEquals(
+			0,
+			_segmentsEntryLocalService.getSegmentsEntriesCount(
+				childGroup.getGroupId(), false));
 	}
 
 	@Test
@@ -345,10 +350,16 @@ public class SegmentsEntryLocalServiceTest {
 
 		List<SegmentsEntry> segmentsEntries =
 			_segmentsEntryLocalService.getSegmentsEntries(
-				childGroup.getGroupId(), QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-				null);
+				childGroup.getGroupId(), true, QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS, null);
 
 		Assert.assertTrue(segmentsEntries.contains(segmentsEntry));
+
+		segmentsEntries = _segmentsEntryLocalService.getSegmentsEntries(
+			childGroup.getGroupId(), false, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+
+		Assert.assertFalse(segmentsEntries.contains(segmentsEntry));
 	}
 
 	@Test
@@ -359,8 +370,8 @@ public class SegmentsEntryLocalServiceTest {
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
 				segmentsEntry.getCompanyId(), segmentsEntry.getGroupId(),
-				segmentsEntry.getNameCurrentValue(), new LinkedHashMap<>(), 0,
-				1, null);
+				segmentsEntry.getNameCurrentValue(), true,
+				new LinkedHashMap<>(), 0, 1, null);
 
 		List<SegmentsEntry> segmentsEntries =
 			baseModelSearchResult.getBaseModels();
@@ -379,7 +390,7 @@ public class SegmentsEntryLocalServiceTest {
 
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
-				segmentsEntry.getCompanyId(), _group.getGroupId(),
+				segmentsEntry.getCompanyId(),
 				segmentsEntry.getNameCurrentValue(), new LinkedHashMap<>(), 0,
 				1, null);
 
@@ -418,7 +429,7 @@ public class SegmentsEntryLocalServiceTest {
 
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
-				_group.getCompanyId(), _group.getGroupId(), null,
+				_group.getCompanyId(), null,
 				LinkedHashMapBuilder.<String, Object>put(
 					"excludedSegmentsEntryIds", excludedSegmentsEntryIds
 				).build(),
@@ -461,7 +472,7 @@ public class SegmentsEntryLocalServiceTest {
 
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
-				segmentsEntry.getCompanyId(), _group.getGroupId(), null,
+				segmentsEntry.getCompanyId(), null,
 				LinkedHashMapBuilder.<String, Object>put(
 					"excludedSegmentsEntryIds", excludedSegmentsEntryIds
 				).put(
@@ -493,7 +504,7 @@ public class SegmentsEntryLocalServiceTest {
 
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
-				segmentsEntry.getCompanyId(), _group.getGroupId(), null,
+				segmentsEntry.getCompanyId(), null,
 				LinkedHashMapBuilder.<String, Object>put(
 					"roleIds", new long[] {_role.getRoleId()}
 				).build(),
@@ -519,7 +530,7 @@ public class SegmentsEntryLocalServiceTest {
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
 				segmentsEntry1.getCompanyId(), segmentsEntry1.getGroupId(),
-				null,
+				null, true,
 				LinkedHashMapBuilder.<String, Object>put(
 					"excludedSegmentsEntryIds",
 					new long[] {segmentsEntry1.getSegmentsEntryId()}
@@ -552,6 +563,7 @@ public class SegmentsEntryLocalServiceTest {
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
 				segmentsEntry.getCompanyId(), segmentsEntry.getGroupId(), null,
+				true,
 				LinkedHashMapBuilder.<String, Object>put(
 					"excludedSources",
 					new String[] {
@@ -580,6 +592,7 @@ public class SegmentsEntryLocalServiceTest {
 		BaseModelSearchResult<SegmentsEntry> baseModelSearchResult =
 			_segmentsEntryLocalService.searchSegmentsEntries(
 				segmentsEntry.getCompanyId(), segmentsEntry.getGroupId(), null,
+				true,
 				LinkedHashMapBuilder.<String, Object>put(
 					"roleIds", new long[] {_role.getRoleId()}
 				).build(),
@@ -631,7 +644,7 @@ public class SegmentsEntryLocalServiceTest {
 		Assert.assertEquals(
 			1,
 			_segmentsEntryLocalService.getSegmentsEntriesCount(
-				_group.getGroupId()));
+				_group.getGroupId(), false));
 	}
 
 	@Test

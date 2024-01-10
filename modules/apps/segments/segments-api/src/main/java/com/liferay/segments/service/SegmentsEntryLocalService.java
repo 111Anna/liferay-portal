@@ -239,7 +239,8 @@ public interface SegmentsEntryLocalService
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public SegmentsEntry fetchSegmentsEntry(
-		long groupId, String segmentsEntryKey);
+		long groupId, String segmentsEntryKey,
+		boolean includeAncestorSegmentsEntries);
 
 	/**
 	 * Returns the segments entry matching the UUID and group.
@@ -376,6 +377,7 @@ public interface SegmentsEntryLocalService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public BaseModelSearchResult<SegmentsEntry> searchSegmentsEntries(
 			long companyId, long groupId, String keywords,
+			boolean includeAncestorSegmentsEntries,
 			LinkedHashMap<String, Object> params, int start, int end, Sort sort)
 		throws PortalException;
 

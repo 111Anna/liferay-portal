@@ -529,7 +529,8 @@ public class EditAssetListDisplayContext {
 		}
 
 		_availableSegmentsEntries = ListUtil.filter(
-			SegmentsEntryServiceUtil.getSegmentsEntries(group.getGroupId()),
+			SegmentsEntryServiceUtil.getSegmentsEntries(
+				group.getGroupId(), true),
 			segmentsEntry -> !ArrayUtil.contains(
 				getSelectedSegmentsEntryIds(),
 				segmentsEntry.getSegmentsEntryId()));

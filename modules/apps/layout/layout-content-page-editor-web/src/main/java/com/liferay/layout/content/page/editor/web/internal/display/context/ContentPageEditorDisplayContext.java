@@ -1109,7 +1109,8 @@ public class ContentPageEditorDisplayContext {
 		List<SegmentsEntry> segmentsEntries =
 			_segmentsEntryService.getSegmentsEntries(
 				stagingGroupHelper.getStagedPortletGroupId(
-					getGroupId(), SegmentsPortletKeys.SEGMENTS));
+					getGroupId(), SegmentsPortletKeys.SEGMENTS),
+				true);
 
 		for (SegmentsEntry segmentsEntry : segmentsEntries) {
 			availableSegmentsEntries.put(
