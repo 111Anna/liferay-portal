@@ -136,10 +136,9 @@ public class IndexUpdaterUtil {
 	}
 
 	public static void updatePortalIndexes() {
-		LoggingTimer loggingTimer = new LoggingTimer(
-			"Updating database indexes for portal");
+		try (LoggingTimer loggingTimer = new LoggingTimer(
+				"Updating database indexes for portal")) {
 
-		try {
 			_addUpdateIndexesFutures(
 				"portal", DBResourceUtil.getPortalTablesSQL(),
 				DBResourceUtil.getPortalIndexesSQL());
@@ -151,8 +150,6 @@ public class IndexUpdaterUtil {
 		}
 		finally {
 			_awaitFuturesTermination();
-
-			loggingTimer.close();
 		}
 	}
 
