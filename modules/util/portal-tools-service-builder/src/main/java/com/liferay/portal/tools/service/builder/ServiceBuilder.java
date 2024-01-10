@@ -4174,13 +4174,32 @@ public class ServiceBuilder {
 					continue;
 				}
 
-				boolean unique = entityFinder.isUnique();
-
-				if (unique && entity.isChangeTrackingEnabled() &&
+				if (entity.isChangeTrackingEnabled() &&
 					!dbNames.contains("ctCollectionId")) {
+
+					if (indexMetadatas != null) {
+						Iterator<IndexMetadata> iterator =
+							indexMetadatas.iterator();
+
+						while (iterator.hasNext()) {
+							IndexMetadata indexMetadata = iterator.next();
+
+							if (indexMetadata.isUnique() &&
+								dbNames.equals(
+									Arrays.asList(
+										indexMetadata.getColumnNames()))) {
+
+								iterator.remove();
+
+								break;
+							}
+						}
+					}
 
 					dbNames.add("ctCollectionId");
 				}
+
+				boolean unique = entityFinder.isUnique();
 
 				if (_optimizeDBIndexes) {
 					for (String highCardinalityColumnName :
