@@ -153,7 +153,7 @@ public class IndexMetadata extends Index implements Comparable<IndexMetadata> {
 			});
 
 		indexName = IndexMetadataFactoryUtil.createIndexName(
-			getTableName(), getColumnNames());
+			isUnique(), getTableName(), _columnNames);
 	}
 
 	public Boolean redundantTo(IndexMetadata indexMetadata) {

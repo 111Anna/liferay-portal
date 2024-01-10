@@ -25,7 +25,7 @@ public class IndexMetadataFactoryUtil {
 		}
 
 		return new IndexMetadata(
-			createIndexName(tableName, columnNames), tableName, unique,
+			createIndexName(unique, tableName, columnNames), tableName, unique,
 			columnNames);
 	}
 
@@ -84,7 +84,7 @@ public class IndexMetadataFactoryUtil {
 	}
 
 	public static String createIndexName(
-		String tableName, String... columnNames) {
+		boolean unique, String tableName, String... columnNames) {
 
 		StringBundler sb = new StringBundler(4 + (columnNames.length * 2));
 
