@@ -53,7 +53,6 @@ public class UpgradeCatchAllCheck extends BaseFileCheck {
 			}
 
 			String from = jsonObject.getString("from");
-
 			Set<String> keys = jsonObject.keySet();
 
 			if ((from.contains(StringPool.OPEN_PARENTHESIS) &&
